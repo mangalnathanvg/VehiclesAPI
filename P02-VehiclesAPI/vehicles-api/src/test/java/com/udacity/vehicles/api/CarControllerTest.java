@@ -5,9 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -145,6 +143,26 @@ public class CarControllerTest {
     }
 
     /**
+     * Tests the updating of a single car by ID and condition.
+     * @throws Exception if the updation operation of a vehicle fails
+     */
+    @Test
+    public void updateCar() throws Exception {
+        /**
+         * TODO: Add a test to check whether a vehicle is appropriately updated
+         *   when the `put` method is called from the Car Controller. This
+         *   should utilize the car from `getCar()` below.
+         */
+        Car car = getCar();
+        mvc.perform(
+                        put(new URI("/cars/2")) // Updating car to USED condition
+                                .content(json.write(car).getJson())
+                                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+    }
+
+    /**
      * Creates an example Car object for use in testing.
      * @return an example Car object
      */
@@ -164,7 +182,40 @@ public class CarControllerTest {
         details.setProductionYear(2018);
         details.setNumberOfDoors(4);
         car.setDetails(details);
-        car.setCondition(Condition.USED);
+        car.setCondition(Condition.NEW);
         return car;
     }
 }
+
+/*
+* {
+  "condition": "USED",
+  "createdAt": "2022-03-23T02:33:44.254Z",
+  "details": {
+    "body": "sedan",
+    "engine": "3.6L V6",
+    "externalColor": "white",
+    "fuelType": "Gasoline",
+    "manufacturer": {
+      "code": 101,
+      "name": "Chevrolet"
+    },
+    "mileage": 32280,
+    "model": "Impala",
+    "modelYear": 2018,
+    "numberOfDoors": 4,
+    "productionYear": 2018
+  },
+  "id": null,
+  "location": {
+    "address": "string",
+    "city": "string",
+    "lat": 40.730610,
+    "lon": -73.935242,
+    "state": "string",
+    "zip": "string"
+  },
+  "modifiedAt": "2022-03-23T02:33:44.254Z",
+  "price": "string"
+}
+* */
